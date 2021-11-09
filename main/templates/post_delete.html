@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block navbar %}
+{% include 'header.html' %}
+{% endblock navbar %}
+{% block main %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="shadow-lg p-3 mb-5 bg-white rounded text-center">
+                    <div class="mb-3">
+                        <h3 class="pb-4 mb-4 font-italic border-bottom">
+                            Delete Post
+                        </h3>
+                        <form method="post" class="m-2 text-left" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <h3>Are you sure you want to delete the post "{{post.title}}"</h3>
+                            <button class="btn btn-md  mt-3 btn-outline-warning" type="submit">Delete </button>
+                            <a class="btn btn-md  mt-3 btn-outline-info"
+                                href="{% url 'post-detail' post.id %}">Cancle</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="p-4 mb-3 bg-light rounded">
+            <h4 class="font-italic">About</h4>
+            <p class="mb-0">I'm working as a software engineer at Infoventive. I’m a nice fun and friendly person. I have a creative mind and am always up for new challenges. I am well organized and always plan ahead to make sure I manage my time well. I have an active and dynamic approach to work and getting things done. I am able to work well both in a team environment as well as using my own initiative. </p>
+        </div>
+
+
+
+        <div class="p-4">
+            <h4 class="font-italic">Elsewhere</h4>
+            <ol class="list-unstyled">
+                <li><a href="https://github.com/rahulraifzb" target="blank">GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/rahulraifzb" target="blank">LinkedIn</a></li>
+                <li><a href="https://www.facebook.com/Rahulraifzb/" target="blank">Facebook</a></li>
+            </ol>
+        </div>
+    </div>
+
+</div>
+
+</main>
+
+{% endblock main %}

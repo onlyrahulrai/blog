@@ -1,0 +1,28 @@
+### Code ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv*
+env/
+venv/
+
+.vscode/launch.json

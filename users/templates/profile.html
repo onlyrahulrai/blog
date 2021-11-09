@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block navbar %}
+{% include 'header.html' %}
+{% endblock navbar %}
+{% block main %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- <div class="row">
+            <div class="col-6">
+                <main class="form-signin " style="max-width:500px">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h3 class="border-bottom pb-3 text-secondary ">Profile Detail</h3>
+                        {{u_form|crispy}}
+                        {{p_form|crispy}}
+                        <button class="btn btn-sm btn-secondary mt-1" type="submit">Update</button>
+                    </form>
+                </main>
+            </div>
+        </div> -->
+
+
+        <div class="shadow-sm p-3 mb-5 bg-white rounded">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr>
+                        <th scope="row">{{post.id}}</th>
+                        <td>{{post.title}}</td>
+                        <td>{{post.date_posted}}</td>
+                        <td>
+                            <a href="{% url 'post-update' post.id %}" class="btn btn-sm btn-outline-secondary"><i
+                                    class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            <a href="{% url 'post-delete' post.id %}" class="btn btn-sm btn-outline-secondary"><i
+                                    class="fa fa-trash" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+    <div class="col-md-4 ">
+
+        <div class="card"> <img class="card-img-top"
+                src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1559285236/profile-bg.jpg" alt="Card image cap">
+            <div class="card-body little-profile text-center">
+                <div class="pro-img mb-3"><img src="{{user.profile.image.url}}" width="75" height="75" alt="user"></div>
+                <h3 class="m-b-0">{{user.username|title}}</h3>
+                <p>{{user.email}}</p>
+                <p>Web Designer &amp; Developer</p>
+                <!-- <a href="javascript:void(0)" class="m-t-10 waves-effect waves-dark btn btn-secondary btn-md btn-rounded" data-abc="true">Follow</a> -->
+
+
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Edit <i class="fa fa-pencil-square-o ml-2" aria-hidden="true"></i>
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Profile Detail</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-left">
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{u_form|crispy}}
+                                    {{p_form|crispy}}
+                                    <div class="modal-footer">
+                                        <button class="btn btn-sm btn-secondary mt-1" type="submit">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Edit Modal End -->
+
+                <div class="row text-center m-t-20">
+                    <div class="col-lg-4 col-md-4 m-t-20">
+                        <h3 class="m-b-0 font-light">{{total_post}}</h3><small>Articles</small>
+                    </div>
+                    <div class="col-lg-4 col-md-4 m-t-20">
+                        <h3 class="m-b-0 font-light">434K</h3><small>Followers</small>
+                    </div>
+                    <div class="col-lg-4 col-md-4 m-t-20">
+                        <h3 class="m-b-0 font-light">5454</h3><small>Following</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="p-4">
+            <h4 class="font-italic">Elsewhere</h4>
+            <ol class="list-unstyled">
+                <li><a href="#">GitHub</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Facebook</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+</main>
+{% endblock main %}

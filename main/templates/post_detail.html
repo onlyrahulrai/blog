@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block navbar %}
+{% include 'header.html' %}
+{% endblock navbar %}
+{% load humanize %}
+{% load extras %}
+{% block main %}
+
+<div class="row">
+  <div class="col-md-8">
+    <h3 class="pb-4 mb-4 font-italic border-bottom">
+      From the Firehose
+    </h3>
+
+
+    <!-- Post List Section Start -->
+    <div class="row g-0  border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-200 position-relative">
+      <div class="col-auto d-none m-2 d-lg-block ">
+        <img src="{{post.author.profile.image.url}}" width="100px" height="100px" class="rounded-circle align-self-end"
+          alt="">
+      </div>
+
+      <div class="col p-4 d-flex flex-column position-static">
+        <div class="d-flex">
+          <a href='{% url "post-user" post.author %}'
+            class="float-left mb-2 text-secondary"><strong>{{post.author|title}}</strong></a>
+          <a href='{% url "post-category" post.category %}'
+            class="float-left ml-2 mb-2 text-secondary"><strong>{{post.category|title}}</strong></a>
+
+        </div>
+        <h3 class="mb-0"><a href="#" class="text-secondary">{{post.title}}</a></h3>
+        <div class="mb-1 text-muted">{{post.date_posted|date:'d F, y'}} | ({{post.views}} views)</div>
+        <p class="card-text ">{{post.content|safe}}</p>
+
+
+      </div>
+      <nav class="blog-pagination ml-5" aria-lable="Pagination">
+        {% if post.author == user %}
+        <a class="btn btn-outline-primary " href="{% url 'post-create' %}">New</a>
+        <a class="btn btn-outline-warning" href="{% url 'post-update' post.id %}">Update</a>
+        <a class="btn btn-outline-info " href="{% url 'post-delete' post.id %}">Delete</a>
+        {% endif %}
+      </nav>
+    </div>
+
+    <!-- Post List Section Start -->
+
+    {% if request.user.is_authenticated %}
+       <!-- Comment Section Start -->
+      <div class="shadow p-3 mb-2 bg-white rounded">
+        <h3>Comment : ({{comments.count}}) </h3>
+        <form action="{% url 'comment' post.id %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <input type="text" name="comment" class="form-control border-none border-bottom" id="exampleFormControlInput1"
+              placeholder="Add your public comment!"required>
+            <input type="hidden" name="parentid" value="">
+            <input type="submit" value="Comment" class="btn mt-3 btn-sm btn-outline-info">
+          </div>
+        </form>
+      </div>
+    <!-- Comment Section End -->
+    {% else %}
+    <a href="{% url 'login' %}" class="btn mb-2 p-2 btn-sm btn-outline-warning">Login for comment</a>
+    {% endif %}
+   
+
+    {% for comment in comments %}
+    <div class="row pl-3 pr-3">
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-2 d-flex justify-content-center p-2">
+            <img src="{{comment.user.profile.image.url}}" class="rounded-circle" alt="..." width="75" height="75">
+          </div>
+          <div class="col-md-10">
+            <div class="card-body">
+              <h3 class="card-title">{{comment.user|title}} <span
+                  class="badge bg-secondary">{{comment.time|naturaltime}}</span></h3>
+              <p class="card-text">{{comment.comment}}</p>
+            </div>
+            
+            
+              <button class="btn btn-primary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample{{comment.id}}" aria-expanded="false" aria-controls="collapseExample{{comment.id}}">
+                  View
+              </button>
+
+            
+
+            {% if request.user.is_authenticated %}
+              <button class="btn btn-primary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapsereply{{comment.id}}" aria-expanded="false" aria-controls="collapsereply{{comment.id}}">
+                reply
+            </button>
+            
+
+            <form action="{% url 'comment' post.id %}" method="post">
+              {% csrf_token %}
+              <div class="mb-3 row collapse"id="collapsereply{{comment.id}}" >
+                <div class="col-md-10">
+                  <input type="text" name="comment" class="form-control border-none border-bottom" id="exampleFormControlInput1"
+                    placeholder="Add your public comment!"required>
+                  <input type="hidden" name="parentid" value="{{comment.id}}">
+                </div>
+                <div class="col-md-2">
+                  <input type="submit" value="Comment" class="btn btn-sm btn-outline-info">
+                </div>
+              </div>
+            </form>
+            {% endif %}
+            
+
+   
+
+          {% for reply in replies|get_val:comment.id %}
+            <div class="row mb-2 collapse mt-2" id="collapseExample{{comment.id}}" >
+              <div class="col-md-2 d-flex justify-content-end p-2">
+                <img src="{{reply.user.profile.image.url}}" width="65" height="65" class="rounded-circle" alt="">
+              </div>
+              <div class="col-md-10">
+                <div class="card-body">
+                  <h3 class="card-title">{{reply.user|title}} <span
+                      class="badge bg-secondary">{{reply.time|naturaltime}}</span></h3>
+                  <p class="card-text">{{reply.comment}}</p>
+                </div>
+
+                {% if request.user.is_authenticated %}
+                <button class="btn btn-primary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapsereply{{reply.id}}" aria-expanded="false" aria-controls="collapsereply{{reply.id}}">
+                reply
+                </button>
+
+                <form action="{% url 'comment' post.id %}" method="post">
+                  {% csrf_token %}
+                  <div class="mb-3 row collapse"id="collapsereply{{reply.id}}" >
+                    <div class="col-md-10">
+                      <input type="text" name="comment" class="form-control border-none border-bottom" id="exampleFormControlInput1"
+                        placeholder="Add your public comment!"required>
+                      <input type="hidden" name="parentid" value="{{comment.id}}">
+                    </div>
+                    <div class="col-md-2">
+                      <input type="submit" value="Comment" class="btn btn-sm btn-outline-info">
+                    </div>
+                  </div>
+                </form>
+                {% endif %}
+                
+
+          
+
+
+              </div>
+            </div>
+          {% endfor %}
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    
+
+
+  </div>
+
+  <div class="col-md-4">
+    <div class="p-4 mb-3 bg-light rounded">
+      <h4 class="font-italic">About</h4>
+      <p class="mb-0">I'm working as a software engineer at Infoventive. I’m a nice fun and friendly person. I have a creative mind and am always up for new challenges. I am well organized and always plan ahead to make sure I manage my time well. I have an active and dynamic approach to work and getting things done. I am able to work well both in a team environment as well as using my own initiative. </p>
+    </div>
+
+
+
+    <div class="p-4">
+      <h4 class="font-italic">Elsewhere</h4>
+      <ol class="list-unstyled">
+        <li><a href="https://github.com/rahulraifzb" target="blank">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/rahulraifzb" target="blank">LinkedIn</a></li>
+        <li><a href="https://www.facebook.com/Rahulraifzb/" target="blank">Facebook</a></li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+{% endblock main %}
